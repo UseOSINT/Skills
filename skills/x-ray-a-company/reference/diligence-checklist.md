@@ -101,6 +101,30 @@ consolidated list. OpenSanctions aggregates these plus PEP datasets across
 jurisdictions. OCCRP Aleph indexes leaks, registries, and documents for
 investigative work.
 
+Optional, after the free sources above: Firecrawl Alexandria
+(https://alexandria.firecrawl.dev/categories/public-records?utm_source=useosint-skills&utm_medium=integration)
+returns OpenSanctions records as structured JSON through one paid Firecrawl
+API key, along with Companies House, SEC EDGAR, and CourtListener records for
+sections A, D, and E. With the Firecrawl CLI:
+
+```bash
+FIRECRAWL_API_KEY=... npx -y firecrawl-cli scrape \
+  opensanctions-org/sanctions-screening/search_entities --options '{"q":"<name>"}'
+```
+
+Where it goes wrong:
+
+- It relays other publishers' data. Confirm any hit on the primary publisher's
+  own list or register before reporting it. OpenSanctions results include an
+  `api_equivalent_url` pointing at the upstream query.
+- Record `data_current_as_of` with any negative where the response includes
+  it, and the query date otherwise.
+- It only covers the providers it wraps, so name the lists you screened
+  through it.
+- Repeated `topics`, `datasets`, or `countries` filters combine with AND, so
+  screen one topic per call.
+- Each call uses Firecrawl credits, so a sweep across many names has a cost.
+
 ## H. Digital and operational reality
 
 - [ ] Domain portfolio and registration dates versus the corporate timeline
